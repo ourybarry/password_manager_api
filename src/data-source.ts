@@ -1,19 +1,22 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "./entity/User"
+import { UserCredential } from "./entity/UserCredential"
 
 export const AppDataSource = new DataSource({
-    type: "postgres",
+    type: "mysql",
     host: "localhost",
-    port: 5432,
-    username: "test",
-    password: "test",
-    database: "test",
+    // port: 5432,
+    username: "oury",
+    password: "admin",
+    database: "password_manager",
     synchronize: true,
     logging: false,
-    entities: [User],
+    entities: [User, UserCredential],
     migrations: [],
     subscribers: [],
 })
 
-AppDataSource.initialize()
+AppDataSource.initialize().catch((err)=>{
+    console.log(err);
+})

@@ -1,18 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import { UserCredential } from "./UserCredential"
 
 @Entity()
 export class User {
 
     @PrimaryGeneratedColumn()
-    id: number
+    id?: number
 
-    @Column()
-    firstName: string
+    @Column({length: 255})
+    email: string
 
-    @Column()
-    lastName: string
+    @Column({length: 255})
+    password: string
 
-    @Column()
-    age: number
+    @OneToMany(()=> UserCredential, (credential)=> credential.owner)
+    credentials: UserCredential[];
 
 }

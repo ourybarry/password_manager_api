@@ -20,11 +20,11 @@ const credentialsRepository = AppDataSource.getRepository(UserCredential)
 //Decrypt single password
 router.get('/decrypt/:id', async (req: Request, res: Response)=>{
     const credentialId = req.params.id
-    const userPassword = req.headers['x-user-password']
+    const user: User = await retrieveUserFromHeaders(req);
 
     const credentials = await credentialsRepository.findOneBy({id: parseInt(credentialId)});
     if(credentials == null) return res.status(404).json({"error":"Couldn't find credentials with that id"});
-    const encryptionSecret = `${userPassword}${credentials.email.toString().substring(0, credentials.domain.toString().length)}`
+    const encryptionSecret = user.password.substring(0,16);
     const decodedBytes = cryptoJS.AES.decrypt(credentials.password, encryptionSecret);
     const decryptedPassword = decodedBytes.toString(cryptoJS.enc.Utf8);
     return res.json({"password": decryptedPassword});
@@ -32,8 +32,7 @@ router.get('/decrypt/:id', async (req: Request, res: Response)=>{
 
 //List all user credentials
 router.get('/all', async (req: Request, res: Response)=>{
-    const userId = req.headers['user']; //User id was previously added to headers by the userauthentication middleware
-    const user: User = await userRepository.findOneBy({id: parseInt(userId.toString())})
+    const user: User = await retrieveUserFromHeaders(req);
     const userCredentials: UserCredential[] = await credentialsRepository.findBy({owner: user});
     res.json(userCredentials);
 })
@@ -41,17 +40,16 @@ router.get('/all', async (req: Request, res: Response)=>{
 //Save new credentials
 router.post('/new', async (req: Request, res: Response)=>{
     const user: User = await retrieveUserFromHeaders(req);
-
-    const userPassword = req.headers['x-user-password']
+    
     const data = req.body;
 
     try{
-        await CredentialSchema.validate(data)
+        await CredentialSchema.validateAsync(data)
     }catch(err){
         return res.status(400).json({'error': err})
     }
 
-    const encryptionSecret = `${userPassword}${data.email.toString().substring(0, data.domain.toString().length)}`
+    const encryptionSecret = user.password.substring(0,16);
     const cypherText = cryptoJS.AES.encrypt(data.password.toString(), encryptionSecret);
 
     const credentials: UserCredential = {

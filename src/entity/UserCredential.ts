@@ -10,11 +10,11 @@ export class UserCredential{
     @Column({length: 255})
     domain: string;
 
-    @Column({length: 255})
+    @Column({length: 255, nullable: true})
     username?: string;
 
-    @Column({length: 255})
-    email: string;
+    @Column({length: 255, nullable: true})
+    email?: string;
 
     @Column({length: 255})
     password: string;

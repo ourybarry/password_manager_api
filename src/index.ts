@@ -29,9 +29,9 @@ app.use(RequestLogger)
 app.use(AppAuthenticator)
 
 //Routes
-app.use('/auth', AuthenticationRoutes)
+app.use('/api/v1/auth', AuthenticationRoutes)
 
-app.use('/credentials', UserAuthenticator, CredentialController);
+app.use('/api/v1/credentials', UserAuthenticator, CredentialController);
 
 
 

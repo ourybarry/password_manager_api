@@ -59,12 +59,12 @@ router.post('/login', async (req: Request, res: Response)=>{
                 "user" : {"id": user.id, "email": user.email},
             };
             const token = jsonWebToken.sign({exp: exp, data: payload}, process.env.APP_JWT_SECRET);
-            //Save plaintext password to cache for future usage
-            await redisClient.connect();
-            const passwordCacheKey = `user_${user.email}_password`;
-            await redisClient.set(passwordCacheKey, data.password);
+            // //Save plaintext password to cache for future usage
+            // await redisClient.connect();
+            // const passwordCacheKey = `user_${user.email}_password`;
+            // await redisClient.set(passwordCacheKey, data.password);
 
-            
+
             return res.json({token, exp});
         }
         return res.status(403).json({"error": "Bad Credentials"});

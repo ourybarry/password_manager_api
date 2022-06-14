@@ -14,7 +14,7 @@ const redisClient = createClient();
 const USER_CREDENTIALS_CACHE_KEY = 'user_';
 const app = express();
 app.use(async(req:Request, res: Response, next: CallableFunction)=>{
-    console.log('We being called...')
+    // console.log('We being called...')
     const user = await retrieveUserFromHeaders(req);
     await redisClient.connect().catch((err)=>{
         console.log(err)

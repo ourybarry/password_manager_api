@@ -31,17 +31,17 @@ app.use(AppAuthenticator)
 //Routes
 app.use('/auth', AuthenticationRoutes)
 
-app.use('/credentials', [UserAuthenticator, PasswordInCache], CredentialController);
+app.use('/credentials', UserAuthenticator, CredentialController);
 
 
 
 
 
 
-app.listen(process.env.APP_DEFAULT_PORT, ()=>{
+app.listen(process.env.APP_DEFAULT_PORT, () => {
     console.log(`Listening on ${process.env.APP_DEFAULT_PORT}`)
 }).on('error', handleListeningError);
 
-function handleListeningError (error){
+function handleListeningError(error) {
     console.error(`Error while trying to launch server ${error.message}`)
 }

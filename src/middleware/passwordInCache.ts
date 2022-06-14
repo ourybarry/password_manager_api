@@ -16,7 +16,9 @@ const app = express();
 app.use(async(req:Request, res: Response, next: CallableFunction)=>{
     console.log('We being called...')
     const user = await retrieveUserFromHeaders(req);
-    await redisClient.connect();
+    await redisClient.connect().catch((err)=>{
+        console.log(err)
+    });
     const userCredentials = await redisClient.get(`${USER_CREDENTIALS_CACHE_KEY}${user.email}_password`);
     if(!userCredentials) return res.status(301).json({"message": "You have to re-enter your password"});
     //Credentials are already in cache, we can pass them to the header and continue

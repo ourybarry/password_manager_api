@@ -15,7 +15,8 @@ router.use((req: Request, res: Response, next : CallableFunction)=>{
 
     try {
         const credentials : any = jsonWebToken.verify(userToken.toString(), process.env.APP_JWT_SECRET);
-        req.headers['x-user-id'] = credentials.id;
+        console.log(credentials)
+        req.headers['x-user-id'] = credentials.data.user.id;
         next();
     } catch (error) {
         return res.status(401).json({error})

@@ -11,7 +11,7 @@ const userRepository = AppDataSource.getRepository(User);
  * @returns @User
  */
 export const retrieveUserFromHeaders = async (req: Request): Promise<User> => {
-    const userId = req.headers['user']; //User id was previously added to headers by the userauthentication middleware
+    const userId = req.headers['x-user-id']; //User id was previously added to headers by the userauthentication middleware
     if(!userId) console.log("Couldn't retrieve user id")
     const user: User = await userRepository.findOneBy({ id: parseInt(userId.toString()) })
     return user;
